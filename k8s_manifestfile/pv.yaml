@@ -1,0 +1,38 @@
+### db-data for mysql database
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv-volume
+  namespace: finlyt
+  labels:
+    type: local
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/db
+  persistentVolumeReclaimPolicy: Retain 
+
+
+---
+###ollama-data for ollama model
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ollama-pv-volume
+  namespace: finlyt
+  labels:
+    type: local 
+spec:
+  storageClassName: ""    
+  capacity:
+    storage: 2Gi  
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/ollama
+  persistentVolumeReclaimPolicy: Retain
+   
