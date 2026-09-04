@@ -1,0 +1,9 @@
+##namespace Finlyt
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finlyt
+spec: {}
+status: {}
+
+...
