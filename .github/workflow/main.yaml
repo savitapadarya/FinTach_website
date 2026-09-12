@@ -7,7 +7,7 @@ on:
 
 jobs:
 #----------
-# CI 
+# CI ci
 #----------
   Maven-build :
     name: Maven build
