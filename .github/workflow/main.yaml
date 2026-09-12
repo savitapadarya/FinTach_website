@@ -1,9 +1,9 @@
 name: Run commands on different operating systems
 on:
   push:
-    branches: [ main ]
+    branches: cicd_pipeline
   pull_request:
-    branches: [ main ]
+    branches: cicd_pipeline
 
 jobs:
 #----------
