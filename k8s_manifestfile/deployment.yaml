@@ -1,0 +1,213 @@
+###Banking App manifest file for deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finlytdeployment
+  namespace: finlyt
+  labels:
+    app: Finlyt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Finlyt
+  template:
+    metadata:
+      labels:
+        app: Finlyt
+    spec:
+      initContainers:
+      - name: wait-for-database-service
+        image: busybox:1.36
+        command: ['sh', '-c', "until nslookup db-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for database; sleep 2; done"]
+      - name: wait-for-ollama-service
+        image: busybox:1.36
+        command: ['sh', '-c', "until nslookup ollama-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for ollama; sleep 2; done"]
+      containers:
+      - name: finlyt-app
+        image: finlyt-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "768Mi"
+            cpu: "500m"
+        envFrom:
+        - configMapRef:
+            name: myconfigmap
+        - secretRef:
+            name: secret-finlyt
+  
+---
+####Database Mysql  Deployment manifest file
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finlytdatabase
+  namespace: finlyt
+  labels:
+    app: Finlyt_db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Finlyt_db
+  template:
+    metadata:
+      labels:
+        app: Finlyt_db
+    spec:
+      volumes:
+      - name: db-pv-volume
+        persistentVolumeClaim:
+          claimName: db-pvc-claim
+      containers:
+      - name: finlyt-db
+        image: mysql:8.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        resources:
+          requests:
+            memory: "550Mi"
+            cpu: "250m"
+          limits:
+            memory: "700Mi"
+            cpu: "500m"
+        env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: myconfigmap
+              key: MYSQL_DATABASE
+
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: myconfigmap
+              key: MYSQL_USER
+
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-finlyt
+              key: MYSQL_PASSWORD
+
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-finlyt
+              key: MYSQL_ROOT_PASSWORD
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: db-pv-volume
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "mysqladmin ping -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD --silent"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+           command:
+              - sh
+              - -c
+              - "mysqladmin ping -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD --silent"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "mysqladmin ping -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD --silent"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollamadeployment
+  namespace: finlyt
+  labels:
+    app: Finlyt_ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Finlyt_ollama
+  template:
+    metadata:
+      labels:
+        app: Finlyt_ollama
+    spec:
+      volumes:
+      - name: ollama-pv-volume
+        persistentVolumeClaim:
+          claimName: ollama-pvc-claim
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 11434
+        resources:
+          requests:
+              memory: "512Mi"
+              cpu: "100m"
+          limits:
+            memory: "2Gi"      # adjust based on which model(s) you're loading
+            cpu: "1000m"
+        envFrom:
+        - configMapRef:
+            name: myconfigmap
+        - secretRef:
+            name: secret-finlyt
+        volumeMounts:
+          - mountPath: "/root/.ollama"
+            name: ollama-pv-volume
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+           command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+

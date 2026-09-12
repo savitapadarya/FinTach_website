@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollamadeployment
+  namespace: finlyt
+  labels:
+    app: Finlyt_ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Finlyt_ollama
+  template:
+    metadata:
+      labels:
+        app: Finlyt_ollama
+    spec:
+      volumes:
+      - name: ollama-pv-volume
+        persistentVolumeClaim:
+          claimName: ollama-pvc-claim
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 11434
+        resources:
+          requests:
+              memory: "512Mi"
+              cpu: "100m"
+          limits:
+            memory: "2Gi"      # adjust based on which model(s) you're loading
+            cpu: "1000m"
+        envFrom:
+        - configMapRef:
+            name: myconfigmap
+        - secretRef:
+            name: secret-finlyt
+        volumeMounts:
+          - mountPath: "/root/.ollama"
+            name: ollama-pv-volume
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+           command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "ollama list"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+

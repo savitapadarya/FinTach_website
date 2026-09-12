@@ -90,4 +90,3 @@ volumes:
 networks:
   finlyt_network:
     driver: bridge
-
