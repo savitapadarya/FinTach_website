@@ -27,3 +27,20 @@ jobs:
 
       - name: Build
         run: mvn compile
+  security_check:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v4
+      - name:  Trivy_installation
+        run: |
+          sudo apt-get install wget gnupg
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update -y
+          sudo apt-get install trivy -y
+      - name:  Trivy_fs_scan
+        run: trivy fs --format table -o fs-report.json .
+      - name: gitleak scan
+        run: sudo apt install gitleaks -y
+        
+      
