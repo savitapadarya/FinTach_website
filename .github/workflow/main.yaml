@@ -9,7 +9,7 @@ on:
 
 jobs:
 #----------
-# CI ci
+# CI 
 #----------
   Maven-build :
     name: Maven build
