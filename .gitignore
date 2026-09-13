@@ -36,3 +36,4 @@ build/
 ### Claude ###
 CLAUDE.md
 .env
+k8s_manifestfile/secret.yaml
