@@ -17,26 +17,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Java 21
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
-          
       - name: Resolve Maven dependencies
         run: mvn dependency:resolve
-
-
       - name: Build
         run: mvn compile
+        
   security_check:
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
