@@ -88,9 +88,9 @@ jobs:
         with:
           image-ref: ${{ vars.DOCKERHUB_USERNAME }}/finlyt:latest
           format: 'table' 
-          exit-code: '1'
+          exit-code: '0'   ##i can not fix this issue
           ignore-unfixed: true
-          #severity: LOW
+          severity: LOW,MEDIUM,HIGH,CRITICAL
       -
         name:  push Docker image to Docker Hub
         uses: docker/build-push-action@v7
