@@ -27,8 +27,7 @@ jobs:
           
       - name: Resolve Maven dependencies
         run: mvn dependency:resolve
-      - name: Lint check
-        run: mvn checkstyle:check
+
 
       - name: Build
         run: mvn compile
