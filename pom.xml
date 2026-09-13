@@ -29,7 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<!-- CVE Remediation: bump past CVE-2026-41293 (CRITICAL) and related Tomcat CVEs -->
-    	<tomcat.version>10.1.55</tomcat.version>
+    	<tomcat.version>10.1.58</tomcat.version>
     	<!-- Fix CVE-2026-54512 / CVE-2026-54513: Jackson PolymorphicTypeValidator bypass -->
    		<jackson-bom.version>2.18.8</jackson-bom.version>
 	</properties>
