@@ -6,7 +6,7 @@ RUN mvn dependency:go-offline
 ## Compile the application and package it into a jar file 
 RUN mvn clean package -DskipTests
 ## The final stage of the build process, where we create a smaller image that only contains the compiled application and its runtime dependencies. This is done to reduce the size of the final image and improve security by excluding unnecessary build tools and files.
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 ## Copy the compiled jar file from the builder stage to the final image 
 COPY --from=builder /app/target/*.jar app.jar
