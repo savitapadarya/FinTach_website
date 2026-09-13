@@ -12,15 +12,3 @@ data:
   MYSQL_DATABASE:   finlytdb ##its name of mysql service name created by us
   MYSQL_USER: finlyt_user  # Database username.
 
----
- #### Secret manifest file
-
-apiVersion: v1
-data:
-  MYSQL_PASSWORD: ZmlubHl0X3Bhc3N3b3Jk
-  MYSQL_ROOT_PASSWORD: ZmlubHl0X3Jvb3RfcGFzc3dvcmQ=
-kind: Secret
-metadata:
-  name: secret-finlyt
-  namespace: finlyt
-type: Opaque
