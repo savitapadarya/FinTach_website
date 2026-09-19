@@ -103,8 +103,8 @@ jobs:
         name: update tage in helm chart of gitops repo
         uses: checkout/helm-update-action@v4
         with:
-          repo: 'savitapadarya/Finlyt-GitOps'
-          token: ${{ secrets.GIT_TOKEN}}
+          repo: "savitapadarya/Finlyt-GitOps"
+          token: ${{secrets.GIT_TOKEN}}
           path:  gitops 
         
       
