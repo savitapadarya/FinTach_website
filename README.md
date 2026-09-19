@@ -15,7 +15,7 @@ A high-performance, containerized financial platform built with Spring Boot 3, J
 
 ---
 
-## Technical Architecture
+## Technical Architecturefd
 
 The application is deployed across a multi-tier, segmented AWS environment. The control plane leverages GitHub Actions with integrated security gates at every stage.
 
