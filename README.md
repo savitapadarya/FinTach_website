@@ -1,6 +1,6 @@
 <div align="center">
 
-# DevSecOps Banking Application
+# DevSecOps Banking Applicationfg
 
 A high-performance, containerized financial platform built with Spring Boot 3, Java 21, and integrated Contextual AI. This project implements a secure "DevSecOps Pipeline" using GitHub Actions, OIDC authentication, and AWS managed services.
 
