@@ -55,7 +55,8 @@ graph TD
     AppEC2 -->|JDBC Connection| DB
     AppEC2 -->|REST Integration| Ollama
     AppEC2 -->|Runtime Secrets| Secrets
-    AppEC2 -->|Pull Image| ECR
+    AppEC2 -->|Pull Image| ECR 
+    io
 ```
 
 ---
