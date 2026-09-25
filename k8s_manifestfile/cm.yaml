@@ -10,5 +10,5 @@ data:
   OLLAMA_URL: http://ollama-service:11434
   OLLAMA_MODEL: tinyllama:latest
   MYSQL_DATABASE:   finlytdb ##its name of mysql service name created by us
-  MYSQL_USER: finlyt_user  # Database usernamesssdmksd
+  MYSQL_USER: finlyt_user  # Database username
 
